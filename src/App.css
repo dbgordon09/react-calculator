@@ -36,6 +36,10 @@
   border: none;
 }
 
+#answer {
+  color: gold;
+}
+
 .Button > h1{
   font-weight: normal !important;
 }
