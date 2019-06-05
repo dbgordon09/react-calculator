@@ -1,10 +1,8 @@
 import React, {useState} from 'react';
-import Button from "./Button";
-
 const Calculator = () => {
     const buttons = [
-        new dataButton("clear-entry", "CE" , ),
-        new dataButton("clear", "C", () => setDisplay("")),
+        new dataButton("clear-entry", "CE" , () => {setDisplay("")}),
+        new dataButton("clear", "C", () => {setDisplay(""); setAnswer(0);}),
         new dataButton("backspace", "<-", (value) => value.slice(0, -1)),
         new dataButton("divide", "/"),
         new dataButton("seven", "7", () => setDisplay(`${display}7`), "Number"),
@@ -41,13 +39,14 @@ const Calculator = () => {
                 <div className="col-6 d-flex align-items-center justify-content-center" id="answer">
                     <h1>{answer}</h1>
                 </div>
-
             </div>
             <div className="row">
                 {buttons.map(button => {
                     return (
                         <div className={`Button col-3 p-3 ${button.styling}`} onClick={() => button.callback()}>
-                            <Button buttonText={button.text} key={button.key}/>
+                            <div className="button-inner">
+                                <h1>{button.text}</h1>
+                            </div>
                         </div>
                     )
                 })}

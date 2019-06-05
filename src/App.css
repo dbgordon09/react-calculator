@@ -40,9 +40,11 @@
   color: gold;
 }
 
-.Button > h1{
-  font-weight: normal !important;
+.button-inner > h1 {
+  cursor: default;
 }
+
+button:focus {outline:0;}
 
 .Button:hover .button-inner {
   color: gold;
