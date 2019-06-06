@@ -1,35 +1,65 @@
 import React, {useState} from 'react';
 const Calculator = () => {
     const buttons = [
-        new dataButton("clear-entry", "CE" , () => {setDisplay("")}),
-        new dataButton("clear", "C", () => {setDisplay(""); setAnswer(0);}),
-        new dataButton("backspace", "<-", (value) => value.slice(0, -1)),
-        new dataButton("divide", "/"),
+        new dataButton("clear-entry", "CE" , () => clearDisplay()),
+        new dataButton("clear", "C", () => {clearDisplay(); setAnswer(0);}),
+        new dataButton("backspace", "<-", () => setDisplay(display.slice(0, -1))),
+        new dataButton("divide", "/", () => {operate(operatorsEnum.DIVIDE)}),
         new dataButton("seven", "7", () => setDisplay(`${display}7`), "Number"),
-        new dataButton("eight", "8", value => `${value}8`, "Number"),
-        new dataButton("nine", "9", value => `${value}9`, "Number"),
-        new dataButton("multiply", "x", value => value),
-        new dataButton("four", "4", value => `${value}4`, "Number"),
-        new dataButton("five", "5", value => `${value}5`, "Number"),
-        new dataButton("six", "6", value => `${value}6`, "Number"),
-        new dataButton("minus", "-", value => value),
-        new dataButton("one", "1", value => `${value}1`, "Number"),
-        new dataButton("two", "2", value => `${value}2`, "Number"),
-        new dataButton("three", "3", value => `${value}3`, "Number"),
-        new dataButton("add", "+", value => value),
-        new dataButton("negate", "+/-", value => value),
-        new dataButton("zero", "0", value => `${value}0`, "Number"),
+        new dataButton("eight", "8", () => setDisplay(`${display}8`), "Number"),
+        new dataButton("nine", "9", () => setDisplay(`${display}9`), "Number"),
+        new dataButton("multiply", "x", () => {operate(operatorsEnum.MULTIPLY)}),
+        new dataButton("four", "4", () => setDisplay(`${display}4`), "Number"),
+        new dataButton("five", "5", () => setDisplay(`${display}5`), "Number"),
+        new dataButton("six", "6", () => setDisplay(`${display}6`), "Number"),
+        new dataButton("minus", "-", () => {operate(operatorsEnum.SUBTRACT)}),
+        new dataButton("one", "1", () => setDisplay(`${display}1`), "Number"),
+        new dataButton("two", "2", () => setDisplay(`${display}2`), "Number"),
+        new dataButton("three", "3", () => setDisplay(`${display}3`), "Number"),
+        new dataButton("add", "+", () => {operate(operatorsEnum.ADD)}),
+        new dataButton("negate", "+/-", () => setDisplay(display[0] === '-' ? display.slice(1) : `-${display}`)),
+        new dataButton("zero", "0", () => setDisplay(`${display}0`), "Number"),
         new dataButton("decimal-point", ",", value => `${value},`),
-        new dataButton("equals", "=", () => setAnswer('42'))
+        new dataButton("equals", "=", () => setAnswer('42')),
     ];
 
+    //Helper functions
+    const clearDisplay = () => {setDisplay('')};
+
+    //Defining an immutable list of operators
+    const operatorsEnum = Object.freeze({ADD: 1, SUBTRACT: 2, MULTIPLY: 3, DIVIDE: 4});
+
+    //Defining state
     const [answer, setAnswer] = useState(0);
     const [display, setDisplay] = useState('');
 
-    const handleInput = (input) => {
-        setDisplay(display + input)
+    //Hold the last used operator in memory
+    let lastOperator = operatorsEnum.ADD;
+
+    //Operator functionality
+    const operate = (operator) => {
+        //Apply the last operator on the running total
+        switch(lastOperator) {
+            case operatorsEnum.ADD:
+                setAnswer(answer + parseFloat(display));
+                break;
+            case operatorsEnum.SUBTRACT:
+                setAnswer(answer - parseFloat(display));
+                break;
+            case operatorsEnum.MULTIPLY:
+                setAnswer(answer * parseFloat(display));
+                break;
+            case operatorsEnum.DIVIDE:
+                setAnswer(answer / parseFloat(display));
+                break;
+            default: {
+            }
+        }
+        clearDisplay();
+        lastOperator = operator;
     };
 
+    //Render Method
     return (
         <div className="container">
             <div className="row">
@@ -53,7 +83,7 @@ const Calculator = () => {
             </div>
         </div>
     )
-}
+};
 
 export default Calculator;
 
