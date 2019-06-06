@@ -6,13 +6,10 @@ const operatorsEnum = Object.freeze({ADD: 1, SUBTRACT: 2, MULTIPLY: 3, DIVIDE: 4
 //Hold the last used operator in memory
 let lastOperator = operatorsEnum.ADD;
 
-//Keep a reference to the last used items so that you can spam the equals
-let memoryOperator = 0;
-
 const Calculator = () => {
     const buttons = [
         new dataButton("clear-entry", "CE" , () => clearDisplay()),
-        new dataButton("clear", "C", () => {clearDisplay(); setAnswer(0); lastOperator = operatorsEnum.ADD}),
+        new dataButton("clear", "C", () => reset()),
         new dataButton("backspace", "<-", () => setDisplay(display.slice(0, -1))),
         new dataButton("divide", "/", () => {operate(operatorsEnum.DIVIDE)}),
         new dataButton("seven", "7", () => setDisplay(`${display}7`), "Number"),
@@ -41,35 +38,44 @@ const Calculator = () => {
         setDisplay('')
     };
 
+    const reset = () => {
+        clearDisplay();
+        setAnswer(0);
+        lastOperator = operatorsEnum.ADD
+    };
+
     //Defining state
     const [answer, setAnswer] = useState(0);
     const [display, setDisplay] = useState('');
 
     //Operator functionality
     const operate = (operator) => {
+        let temp = 0;
         //Apply the last operator on the running total
         if (display.length > 0) {
             switch (lastOperator) {
                 case operatorsEnum.ADD:
-                    setAnswer(answer + parseFloat(display));
+                    temp =answer + parseFloat(display);
                     break;
                 case operatorsEnum.SUBTRACT:
-                    setAnswer(answer - parseFloat(display));
+                    temp = answer - parseFloat(display);
                     break;
                 case operatorsEnum.MULTIPLY:
-                    setAnswer(answer * parseFloat(display));
+                    temp = answer * parseFloat(display);
                     break;
                 case operatorsEnum.DIVIDE:
-                    setAnswer(answer / parseFloat(display));
-                    break;
-                case operatorsEnum.EQUALS:
-
+                    temp = answer / parseFloat(display);
                     break;
                 default: {
                 }
             }
+            setAnswer(temp);
             clearDisplay();
-            lastOperator = operator;
+            if (operator === operatorsEnum.EQUALS) {
+                alert(`Answer is ${temp}`);
+                reset();
+            } else
+                lastOperator = operator;
         }
     };
 
@@ -78,7 +84,7 @@ const Calculator = () => {
         <div className="container">
             <div className="row">
                 <div className="col-6">
-                    <input className="Calc-input" value={display}/>
+                    <input className="Calc-input" value={display} readOnly={true}/>
                 </div>
                 <div className="col-6 d-flex align-items-center justify-content-center" id="answer">
                     <h1>{answer}</h1>
