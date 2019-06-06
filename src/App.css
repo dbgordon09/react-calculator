@@ -7,6 +7,7 @@
   height: 40vmin;
   pointer-events: none;
   max-height: 50px;
+  max-width: 50px;
 }
 
 .App-header {

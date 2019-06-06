@@ -21,7 +21,7 @@ body {
 
 footer {
   padding: 32px;
-  font-size: calc(2vmin);
+  font-size: calc(12px + 1.52vmin);
 }
 
 footer > img {
